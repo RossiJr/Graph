@@ -14,7 +14,7 @@ public class Tp01 {
                 if (!GeneralUtils.isEmpty(path) && GeneralUtils.isFileExists(new File(path)))
                     graph = new GraphRepresentation(path);
             } while (graph == null);
-            Integer node = -1;
+            int node = -1;
             do {
                 try {
                     System.out.print("Type the expected node (Integer value between 1 and " + graph.size() + "): ");

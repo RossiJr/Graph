@@ -3,11 +3,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PredecessorRepresentationGraph {
-    private final String pathAux = "D:\\graphs\\data\\graph-aux.tmp.txt";
+    private final String pathAux = "Data\\graph-aux.tmp.txt";
 
     private Integer[] origin;
     private Integer[] destiny;
 
+    /**
+        * Method not efficient - Just a palliative implementation
+     */
     private BufferedReader sortFile(String path) throws IOException{
         BufferedReader file = new BufferedReader(new FileReader(path));
         if(!GeneralUtils.isValidFile(file)){
@@ -42,22 +45,21 @@ public class PredecessorRepresentationGraph {
         });
         auxFile.close();
 
-        //RandomAccessFile aux2File = new RandomAccessFile(path, "rw");
-        //aux2File.setLength(aux2File.length()-1);
-        //aux2File.close();
         return new BufferedReader(new FileReader(pathAux));
     }
 
-    public PredecessorRepresentationGraph(String path) throws IOException {
-        BufferedReader file = sortFile(path);
+    public PredecessorRepresentationGraph(String path, boolean sortedFile) throws IOException {
+        BufferedReader file;
+        if(!sortedFile)
+            file = sortFile(path);
+        else
+            file = new BufferedReader(new FileReader(path));
 
         //CONSIDERA QUE O ARQUIVO ESTEJA ORDENADO PELA COLUNA DE ARESTAS
         if(GeneralUtils.isValidFile(file)){
             List<Integer[]> arrays = GraphsUtils.processFile(file);
             destiny = arrays.get(0);
             origin = arrays.get(1);
-
-            //Arrays.stream(destiny).forEach(System.out::println);
         } else {
             throw new IOException("Error while opening the file");
         }
