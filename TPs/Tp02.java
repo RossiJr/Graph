@@ -6,5 +6,6 @@ public class Tp02 {
         Scanner sc = new Scanner(System.in);
         String path = sc.nextLine();
         GraphsUtils.generateRandomGraph(path, 100, 5, 13);
+        sc.close();
     }
 }
