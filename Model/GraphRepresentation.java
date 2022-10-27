@@ -8,7 +8,6 @@ public class GraphRepresentation {
     private SuccessorsRepresentationGraph succesors;
     private PredecessorRepresentationGraph predecessors;
 
-
     /**
      * Functions that returns the predecessors or successors nodes
      *
@@ -116,5 +115,28 @@ public class GraphRepresentation {
         } else {
             throw new FileNotFoundException("File '" + pathSuccessors + "' or '" + pathPredecessors + "' not found!");
         }
+    }
+
+    public void setSuccesors(SuccessorsRepresentationGraph succesors) {
+        this.succesors = succesors;
+    }
+
+    public SuccessorsRepresentationGraph getSuccessors(){
+        return this.succesors;
+    }
+
+    public SuccessorsRepresentationGraph cloneSuccesors() {
+        return this.succesors.clone();
+    }
+
+    // LEMBRAR DE RETORNAR A ÚNICA ARESTA DISPONÍVEL CASO SÓ HAJA PONTES
+    public int[] selectNonBridge() {
+        return null;
+    }
+
+    public void removeEdge(int[] aresta) {
+        Integer[] vetOrig = succesors.getOrigin();
+        int destinyPosition = vetOrig[aresta[0]];
+
     }
 }

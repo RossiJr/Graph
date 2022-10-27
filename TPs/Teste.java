@@ -16,5 +16,7 @@ public class Teste {
             entropiaAtributo += (-valor1*log2(valor1)-valor2*log2(valor2))*porcentagem;
         }
         System.out.println(entropiaClasse - entropiaAtributo);
+
+        sc.close();
     }
 }
