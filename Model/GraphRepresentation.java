@@ -1,3 +1,4 @@
+import javax.print.attribute.IntegerSyntax;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -116,5 +117,38 @@ public class GraphRepresentation {
         } else {
             throw new FileNotFoundException("File '" + pathSuccessors + "' or '" + pathPredecessors + "' not found!");
         }
+    }
+    private List<Integer> naive(){
+        List<Integer> bridges = new ArrayList<>();
+        SuccessorsRepresentationGraph successorsClone = succesors.clone();
+
+
+
+        return bridges;
+    }
+
+    public List<Integer> getBridges(String algorithm){
+        if(algorithm.equals("naive")){
+            return naive();
+        }
+
+
+        return null;
+    }
+    public boolean isEureliano(){
+        List<Integer> grausVertices = new ArrayList<>();
+        for(int i=1; i<=size(); i++){
+            grausVertices.add(getOutDegree(i));
+        }
+
+        return true;
+    }
+
+    public void setSuccesors(SuccessorsRepresentationGraph succesors) {
+        this.succesors = succesors;
+    }
+
+    public void setPredecessors(PredecessorRepresentationGraph predecessors) {
+        this.predecessors = predecessors;
     }
 }
