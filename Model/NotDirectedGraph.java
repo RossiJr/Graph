@@ -14,9 +14,20 @@ public class NotDirectedGraph {
 
     private List<Integer[]> edgesEurelianTour;
 
+    private int vertixCount;
+    private LinkedList<Integer> adjacentLists[];
+    private int Time;
+
     public NotDirectedGraph(String path) throws IOException {
         this.edges = GraphsUtils.processFileNotDirected(new BufferedReader(new FileReader(path)));
         edgesClone = new ArrayList<>(edges);
+        vertixCount = this.edges.size();
+        adjacentLists = new LinkedList[vertixCount];
+
+        for (int i = 0; i < vertixCount; ++i)
+            adjacentLists[i] = new LinkedList();
+
+        Time = 0;
     }
 
     public List<Integer> getSuccessors(Integer vertice) {
@@ -106,26 +117,19 @@ public class NotDirectedGraph {
         Integer amountOfVertices = this.edges.size();
 
         // Set time array
-        Integer[] tDiscovery = new Integer[amountOfVertices];
-        Integer[] tFinish = new Integer[amountOfVertices];
-        Integer[] father = new Integer[amountOfVertices];
+        tDiscovery = new Integer[amountOfVertices];
+        Integer componentsCount = getConnectedComponents().size();
 
         //Connectivity brute test
         for (int i = 0; i < amountOfVertices; i++) {
             for (Integer e : this.edges.get(i).stream().sorted(Comparator.naturalOrder()).toList()) {
                 //Removing edge "i" to "e"
-                removeEdge(i, e, this.edgesClone);
+                removeEdge(i, e, this.edges);
 
                 //Time array inicialization
                 tDiscovery = Arrays.stream(tDiscovery).map(j -> j = 0).toArray(Integer[]::new);
-                tFinish = Arrays.stream(tFinish).map(j -> j = 0).toArray(Integer[]::new);
-                father = Arrays.stream(father).map(j -> j = 0).toArray(Integer[]::new);
-                Integer time = 0;
-                Integer currentVertice = tDiscovery[0];
-                time = depthSearchRecursive(time, currentVertice);
-
-                //Checking unexplored vertices
-                if (Arrays.stream(tDiscovery).anyMatch(x -> x == 0)) {
+                Integer componentsCountNaive = getConnectedComponents().size();
+                if (componentsCountNaive > componentsCount) {
                     if (!bridges.containsKey(i))
                         bridges.put(i, new ArrayList<>());
                     bridges.get(i).add(e);
@@ -136,16 +140,11 @@ public class NotDirectedGraph {
         return bridges;
     }
 
-    public void tarjan() {
-        List<List<Integer>> components = getConnectedComponents();
-
-    }
-
     public List<Integer[]> eurelianTour() {
         edgesEurelianTour = new ArrayList<>();
         Integer u = 0;
         for (int i = 0; i < this.edges.size(); i++) {
-            if (getOutDegree(i+1) % 2 == 1) {
+            if (getOutDegree(i + 1) % 2 == 1) {
                 u = i;
                 break;
             }
@@ -157,11 +156,11 @@ public class NotDirectedGraph {
     private void eurelianUtil(Integer u) {
         // Recur for all the vertices adjacent to this
         // vertex
-        for (int i = 0; i < getOutDegree(u+1); i++) {
-            Integer v = getSuccessors(u+1).get(i);
+        for (int i = 0; i < getOutDegree(u + 1); i++) {
+            Integer v = getSuccessors(u + 1).get(i);
             // If edge u-v is a valid next edge
             if (isValidNextEdge(u, v)) {
-                this.edgesEurelianTour.add(new Integer[]{u+1, v+1});
+                this.edgesEurelianTour.add(new Integer[]{u + 1, v + 1});
                 // This edge is used so remove it now
                 removeEdge(u, v, this.edgesClone);
                 eurelianUtil(v);
@@ -175,7 +174,7 @@ public class NotDirectedGraph {
 
         // 1) If v is the only adjacent vertex of u
         // ie size of adjacent vertex list is 1
-        if (getOutDegree(u+1) == 1) {
+        if (getOutDegree(u + 1) == 1) {
             return true;
         }
 
@@ -202,11 +201,67 @@ public class NotDirectedGraph {
         isVisited[v] = true;
         int count = 1;
         // Recur for all vertices adjacent to this vertex
-        for (int adj : getSuccessors(v+1)) {
+        for (int adj : getSuccessors(v + 1)) {
             if (!isVisited[adj]) {
                 count = count + dfsCount(adj, isVisited);
             }
         }
         return count;
+    }
+
+    void tarjan() {
+        int disc[] = new int[vertixCount];
+        int low[] = new int[vertixCount];
+        for (int i = 0; i < vertixCount; i++) {
+            disc[i] = -1;
+            low[i] = -1;
+        }
+        boolean stackMember[] = new boolean[vertixCount];
+        Stack<Integer> st = new Stack<>();
+        for (int i = 0; i < vertixCount; i++) {
+            if (disc[i] == -1)
+                findStronglyConnectedComponents(
+                        i,
+                        low,
+                        disc,
+                        stackMember,
+                        st);
+        }
+    }
+
+    private void findStronglyConnectedComponents(int u, int low[], int disc[],
+                                         boolean stackMember[],
+                                         Stack<Integer> st) {
+
+        disc[u] = Time;
+        low[u] = Time;
+        Time += 1;
+        stackMember[u] = true;
+        st.push(u);
+
+        int n;
+
+        Iterator<Integer> i = adjacentLists[u].iterator();
+
+        while (i.hasNext()) {
+            n = i.next();
+
+            if (disc[n] == -1) {
+                findStronglyConnectedComponents(n, low, disc, stackMember, st);
+                low[u] = Math.min(low[u], low[n]);
+            } else if (stackMember[n] == true) {
+                low[u] = Math.min(low[u], disc[n]);
+            }
+        }
+
+        int w = -1;
+        if (low[u] == disc[u]) {
+            while (w != u) {
+                w = (int) st.pop();
+//                System.out.print(w + " ");
+                stackMember[w] = false;
+            }
+//            System.out.println();
+        }
     }
 }

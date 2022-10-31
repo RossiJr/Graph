@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Tp02 {
@@ -17,10 +18,11 @@ public class Tp02 {
         List<NotDirectedGraph> graphs = new ArrayList<>();
         for(int i=1; i<=5; i++)
             try {
-                new NotDirectedGraph((replace(eurelianPath, 10, i))).eurelianTour().forEach(j -> System.out.print(j[0] + " - " + j[1] + " | "));
+//                new NotDirectedGraph((replace(eurelianPath, 10, i))).eurelianTour().forEach(j -> System.out.print(j[0] + " - " + j[1] + " | "));
 //                System.out.println(new NotDirectedGraph("D:\\graphs\\Data\\others\\graph-eurelian-tour-test.txt").getConnectedComponents() + " | " + i);
 //                new NotDirectedGraph("D:\\graphs\\Data\\others\\graph-eurelian-tour-test.txt").eurelianTour().forEach(j -> System.out.print(j[0] + " - " + j[1] + " | "));
-                System.out.println();
+                Map<Integer, List<Integer>> map = new NotDirectedGraph("D:\\graphs\\Data\\others\\graph-test-small.txt").naive();
+                System.out.println(map.entrySet());
             } catch (StackOverflowError e){
                 i--;
 //                e.printStackTrace();
