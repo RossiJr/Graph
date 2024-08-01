@@ -64,6 +64,9 @@ public class PredecessorRepresentationGraph {
             throw new IOException("Error while opening the file");
         }
     }
+    public SuccessorsRepresentationGraph clone(){
+        return new SuccessorsRepresentationGraph(this.origin.clone(), this.destiny.clone());
+    }
 
     public Integer[] getOrigin(){
         return this.origin;

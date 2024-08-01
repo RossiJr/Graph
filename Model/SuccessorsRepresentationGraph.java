@@ -36,4 +36,8 @@ public class SuccessorsRepresentationGraph {
     public Integer[] getDestiny() {
         return this.destiny;
     }
+
+    public SuccessorsRepresentationGraph clone(){
+        return new SuccessorsRepresentationGraph(this.origin.clone(), this.destiny.clone());
+    }
 }
